@@ -76,7 +76,7 @@ dalcom-level-survey/
         ├── ProgressBar.tsx        # 4. 진행률 표시
         ├── QuestionScreen.tsx     # 2·3. 한 화면에 한 문항
         ├── OptionGroup.tsx        # 접근성 라디오그룹 (키보드 · aria)
-        ├── QuestionImages.tsx     # 문항 이미지(1장 / 1·2단계 비교) + 확대 보기
+        ├── QuestionImages.tsx     # 문항 이미지 (1장 / 1·2단계 비교)
         └── ResultScreen.tsx       # 7·9·10. 결과 · 표지 · 재검사 · CTA
 ```
 
@@ -108,8 +108,7 @@ dalcom-level-survey/
 ## 문항 이미지
 
 2~11번 문항에 교재 이미지가 붙어 있습니다.
-이미지에 커서를 올리면 어두워지면서 `IMAGE_ZOOM_HINT` 문구가 뜨고,
-클릭(탭)하면 전체 화면으로 커집니다. Esc 로 닫습니다.
+확대 보기 기능은 넣지 않았습니다. 모바일에서 화면을 벌려 확대하면 충분히 보입니다.
 
 | 문항 | 이미지 | 설명 |
 | --- | --- | --- |

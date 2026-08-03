@@ -108,6 +108,23 @@ git push -u origin main
 
 ---
 
+## 카카오톡 미리보기 (썸네일)
+
+링크를 카톡에 붙여넣으면 제목·설명·썸네일이 함께 뜹니다.
+`src/app/layout.tsx` 의 `metadata` 에서 문구를, `public/og-image.jpg` 에서 그림을 바꿉니다.
+
+**배포 주소를 바꿨다면** Vercel → Settings → Environment Variables 에 아래를 추가하세요.
+
+| Name | Value |
+| --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | `https://실제주소.vercel.app` |
+
+**썸네일이 안 바뀌거나 예전 것이 계속 뜬다면** 카카오가 미리보기를 저장해두기 때문입니다.
+[카카오 캐시 초기화 도구](https://developers.kakao.com/tool/clear/og) 에 주소를 넣고
+초기화한 뒤 다시 공유하면 됩니다.
+
+---
+
 ## 모이는 데이터
 
 개인정보는 수집하지 않습니다. 이름, 연락처, IP 주소 모두 저장하지 않습니다.

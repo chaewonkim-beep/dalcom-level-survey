@@ -243,9 +243,6 @@ export const QUESTION_NOTICE = {
   text: '다음 문항부터는\n우리 아이 모습에 더 가까운 쪽을 골라주세요.',
 } as const;
 
-/** 이미지에 커서를 올렸을 때 이미지 위에 뜨는 문구 */
-export const IMAGE_ZOOM_HINT = '이미지를 클릭하면 커집니다';
-
 /** 이미지 두 장(1단계·2단계)을 나란히 보여줄 때 아래에 붙는 설명 */
 export const IMAGE_COMPARE_CAPTION = '유아 1단계, 2단계 비교';
 
