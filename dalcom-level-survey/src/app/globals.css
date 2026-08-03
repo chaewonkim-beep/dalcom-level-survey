@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* 키보드 사용자에게만 포커스 링을 강조 */
+:focus-visible {
+  outline: 3px solid #ea580c;
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
