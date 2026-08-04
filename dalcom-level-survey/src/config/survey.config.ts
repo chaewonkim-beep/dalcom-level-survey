@@ -112,7 +112,7 @@ export const CHOICE_QUESTIONS: ChoiceQuestion[] = [
   {
     id: 5,
     type: 'choice',
-    title: '수를 20에서부터 거꾸로 세어 내려가는 것이 어렵지 않다.',
+    title: '수를 20에서부터 거꾸로 세어 내려갈 수 있다.',
     scoreB: 2,
     images: [
       {
@@ -124,7 +124,7 @@ export const CHOICE_QUESTIONS: ChoiceQuestion[] = [
     ],
     options: [
       { value: 'A', label: '아직 어려워해요' },
-      { value: 'B', label: '어렵지 않아요' },
+      { value: 'B', label: '할 수 있어요' },
     ],
   },
   {
@@ -178,13 +178,13 @@ export const CHOICE_QUESTIONS: ChoiceQuestion[] = [
     ],
     options: [
       { value: 'A', label: '아직 어려워해요' },
-      { value: 'B', label: '말할 수 있어요' },
+      { value: 'B', label: '할 수 있어요' },
     ],
   },
   {
     id: 9,
     type: 'choice',
-    title: '수의 크기를 비교하는 것이 어렵지 않다.',
+    title: '수의 크기를 비교할 수 있다.',
     scoreB: 2,
     images: [
       {
@@ -196,13 +196,13 @@ export const CHOICE_QUESTIONS: ChoiceQuestion[] = [
     ],
     options: [
       { value: 'A', label: '아직 어려워해요' },
-      { value: 'B', label: '어렵지 않아요' },
+      { value: 'B', label: '할 수 있어요' },
     ],
   },
   {
     id: 10,
     type: 'choice',
-    title: '수를 단순히 읽는 것을 넘어 ‘양’으로 이해하고 있다.',
+    title: '수를 단순히 읽는 것을 넘어 ‘양’으로 이해할 수 있다.',
     scoreB: 2,
     images: [
       {
@@ -214,20 +214,20 @@ export const CHOICE_QUESTIONS: ChoiceQuestion[] = [
     ],
     options: [
       { value: 'A', label: '아직 어려워해요' },
-      { value: 'B', label: '이해하고 있어요' },
+      { value: 'B', label: '할 수 있어요' },
     ],
   },
 ];
 
 /**
  * 특정 문항에서 한 번만 보여주는 안내.
- * questionNumber 를 바꾸면 다른 문항으로 옮길 수 있고,
- * text 를 빈 문자열로 두면 표시되지 않습니다.
+ * text 를 채우면 questionNumber 번째 문항에 표시됩니다.
+ * 지금은 쓰지 않아 비워 두었습니다.
  */
 export const QUESTION_NOTICE = {
   /** 몇 번째 문항에 띄울지 (1부터) */
   questionNumber: 2,
-  text: '다음 문항부터는\n우리 아이 모습에 더 가까운 쪽을 골라주세요.',
+  text: '',
 } as const;
 
 /** 이미지 두 장(1단계·2단계)을 나란히 보여줄 때 아래에 붙는 설명 */
