@@ -15,7 +15,7 @@ export const INTRO_CONTENT = {
   description:
     '아이의 연령, 경험, 현재 수준을 확인하고\n우리 아이에게 맞는 단계를 찾아보세요.',
   /** 보조 문구 */
-  subText: '약 1분 · 총 11문항',
+  subText: '약 1분 · 총 10문항',
   /** 시작 버튼 */
   startLabel: '우리 아이 단계 확인하기',
   /** 시작 화면에 설명 없이 나란히 놓는 교재 표지 2장 */
@@ -49,33 +49,15 @@ export const AGE_QUESTION: AgeQuestion = {
  * 핵심 수·연산 문항(5~7번)만 2점, 나머지는 1점 → 총점 13점 만점
  */
 export const CHOICE_QUESTIONS: ChoiceQuestion[] = [
+  /* ---------------------- 사고력 수준 (각 1점) ---------------------- */
   {
     id: 2,
-    type: 'choice',
-    title: '달콤 프로젝트나 특강을 경험해 본 적이 있나요?',
-    scoreB: 1,
-    images: [
-      {
-        src: '/images/q3.jpg',
-        alt:
-          '달콤수학 로드맵 표. 4세부터 11세까지 나이별로 유아사고력 1·2단계, 초등사고력 1~3단계 프로젝트와 스터디, 스페셜, 특강 과정이 언제 진행되는지 한눈에 정리되어 있습니다.',
-        label: '달콤수학 로드맵',
-        wide: true,
-      },
-    ],
-    options: [
-      { value: 'A', label: '처음 참여해요.' },
-      { value: 'B', label: '참여한 적이 있어요.' },
-    ],
-  },
-  {
-    id: 3,
     type: 'choice',
     title: '사고력 문제집이나 수업을 경험해 본 적이 있나요?',
     scoreB: 1,
     images: [
       {
-        src: '/images/q2.jpg',
+        src: '/images/q2-mouse-game.jpg',
         alt:
           '유아 1단계 교재의 ’쥐를 잡자! 게임’ 게임판. 두 수와 물음표가 그려진 쥐 카드가 놓여 있습니다.',
         label: '유아 1단계',
@@ -87,13 +69,13 @@ export const CHOICE_QUESTIONS: ChoiceQuestion[] = [
     ],
   },
   {
-    id: 4,
+    id: 3,
     type: 'choice',
     title: '사고력 문제를 풀거나 새로운 활동을 시작할 때',
     scoreB: 1,
     images: [
       {
-        src: '/images/q4.jpg',
+        src: '/images/q3-order.jpg',
         alt:
           '유아 2단계 교재의 ’올바른 순서를 찾아라’ 페이지. 1부터 7까지 적힌 종이컵의 자리를 서로 바꾸며 올바른 순서를 찾는 활동입니다.',
         label: '유아 2단계',
@@ -105,103 +87,13 @@ export const CHOICE_QUESTIONS: ChoiceQuestion[] = [
     ],
   },
   {
-    id: 5,
-    type: 'choice',
-    title: '많은 물건의 개수를 셀 때',
-    scoreB: 2,
-    images: [
-      {
-        src: '/images/q5.jpg',
-        alt:
-          '유아 2단계 교재의 ’그림 묶어 세기’ 페이지. 흩어진 케이크 그림을 묶어 세는 활동입니다.',
-        label: '유아 2단계',
-      },
-    ],
-    options: [
-      { value: 'A', label: '하나씩 세고, 개수가 많아지면 헷갈려요.' },
-      { value: 'B', label: '30개 이상 정확히 세고, 10개씩 묶어 셀 수 있어요.' },
-    ],
-  },
-  {
-    id: 6,
-    type: 'choice',
-    title: '10을 두 수로 가르고 모을 때',
-    scoreB: 2,
-    images: [
-      {
-        src: '/images/q6-level2.jpg',
-        alt:
-          '유아 2단계 교재의 모으기 가르기 활동. 직산 카드를 모으기 가르기 판에 올려 1에서 10까지의 수를 다루는 예시입니다.',
-        label: '유아 2단계',
-      },
-    ],
-    options: [
-      { value: 'A', label: '손가락이나 교구를 이용해 답을 찾아요.' },
-      { value: 'B', label: '10을 만드는 수 조합을 알고 있어요.' },
-    ],
-  },
-  {
-    id: 7,
-    type: 'choice',
-    title: '받아올림이 없는 한 자리 수의 덧셈·뺄셈을 할 때',
-    scoreB: 2,
-    images: [
-      {
-        src: '/images/q7.jpg',
-        alt:
-          '유아 2단계 교재의 ’(몇십) + (몇), (몇십몇) + (몇)’ 덧셈 페이지. 수 카드 두 장을 뽑아 수 막대 카드로 나타내고 계산해 보는 활동입니다.',
-        label: '유아 2단계',
-      },
-    ],
-    options: [
-      { value: 'A', label: '손가락이나 교구의 도움이 필요해요.' },
-      { value: 'B', label: '대부분의 문제를 어렵지 않게 풀어요.' },
-    ],
-  },
-  {
-    id: 8,
-    type: 'choice',
-    title: '위치를 나타내는 말을 들었을 때',
-    scoreB: 1,
-    images: [
-      {
-        src: '/images/q8-level2.jpg',
-        alt:
-          '유아 2단계 교재의 ’앞, 옆, 위에서 본 모양’ 페이지. 쌓기나무를 앞, 옆, 위 세 방향에서 본 모양을 그려 보는 활동입니다.',
-        label: '유아 2단계',
-      },
-    ],
-    options: [
-      { value: 'A', label: '위치를 하나씩 알려주어야 해요.' },
-      { value: 'B', label: '앞, 옆, 위와 같은 말을 이해해요.' },
-    ],
-  },
-  {
-    id: 9,
-    type: 'choice',
-    title: '반복되는 패턴을 보았을 때',
-    scoreB: 1,
-    images: [
-      {
-        src: '/images/q9.jpg',
-        alt:
-          '유아 2단계 교재의 ’패턴 놀이’ 페이지. 과일 카드로 패턴을 만들고 이어서 놓는 활동과, 요소를 더해 이중 패턴을 만드는 활동입니다.',
-        label: '유아 2단계',
-      },
-    ],
-    options: [
-      { value: 'A', label: '다음 패턴을 계속 알려주어야 해요.' },
-      { value: 'B', label: '패턴을 기억하고 다음을 예상할 수 있어요.' },
-    ],
-  },
-  {
-    id: 10,
+    id: 4,
     type: 'choice',
     title: '규칙이 있는 게임을 할 때',
     scoreB: 1,
     images: [
       {
-        src: '/images/q10.jpg',
+        src: '/images/q4-number-game.jpg',
         alt:
           '유아 2단계 교재의 ’목표 수 만들기 게임’ 페이지. 수 카드를 펼쳐 놓고 더해서 목표 수가 되는 두 카드를 먼저 찾는 게임입니다.',
         label: '유아 2단계',
@@ -212,22 +104,117 @@ export const CHOICE_QUESTIONS: ChoiceQuestion[] = [
       { value: 'B', label: '규칙을 기억하고 차례에 맞게 참여해요.' },
     ],
   },
+
+  /* ---------------------- 수와 연산 (각 2점) ----------------------
+   * 아래 6문항이 단계를 가르는 핵심입니다.
+   * 이미지가 준비되면 각 문항에 images 를 넣어주세요.
+   * ---------------------------------------------------------------- */
   {
-    id: 11,
+    id: 5,
     type: 'choice',
-    title: '바로 답이 나오지 않는 문제를 만났을 때',
-    scoreB: 1,
+    title: '수를 20에서부터 거꾸로 세어 내려가는 것이 어렵지 않다.',
+    scoreB: 2,
     images: [
       {
-        src: '/images/q11.jpg',
+        src: '/images/q5-count-back.jpg',
         alt:
-          '유아 2단계 교재의 ’수 구슬을 차곡차곡’ 페이지. 아래 두 수를 더하면 바로 위의 수가 되는 규칙에 맞게 빈 구슬을 채우는 문제입니다.',
+          '유아 2단계 교재의 ’수의 순서 길 연결하기’ 페이지. 9, 13, 16처럼 적힌 칸과 구슬·수 막대 그림을 수의 순서대로 길처럼 연결하는 활동입니다.',
         label: '유아 2단계',
       },
     ],
     options: [
-      { value: 'A', label: '어려워하며 바로 도움을 요청해요.' },
-      { value: 'B', label: '스스로 한 번 더 생각하거나 시도해요.' },
+      { value: 'A', label: '아직 어려워해요' },
+      { value: 'B', label: '어렵지 않아요' },
+    ],
+  },
+  {
+    id: 6,
+    type: 'choice',
+    title: '한 자리 수의 연산을 천천히 할 수 있다.',
+    scoreB: 2,
+    images: [
+      {
+        src: '/images/q6-numberline.jpg',
+        alt:
+          '유아 2단계 교재의 ’수직선에서 작은 수 연산하기’ 페이지. 수 카드와 기호 카드를 뽑아 수직선 위에서 덧셈과 뺄셈을 해 보는 활동입니다.',
+        label: '유아 2단계',
+      },
+    ],
+    options: [
+      { value: 'A', label: '아직 어려워해요' },
+      { value: 'B', label: '할 수 있어요' },
+    ],
+  },
+  {
+    id: 7,
+    type: 'choice',
+    title: '두 개씩 묶어 셀 수 있다.',
+    scoreB: 2,
+    images: [
+      {
+        src: '/images/q7-count-by-two.jpg',
+        alt:
+          '유아 2단계 교재의 ’2씩 묶어 세기’ 페이지. 구체물 20개를 2개씩 묶어 세고 짝수인지 홀수인지 이야기해 보는 활동입니다.',
+        label: '유아 2단계',
+      },
+    ],
+    options: [
+      { value: 'A', label: '아직 어려워해요' },
+      { value: 'B', label: '할 수 있어요' },
+    ],
+  },
+  {
+    id: 8,
+    type: 'choice',
+    title: '더해서 10이 되는 두 수를 말할 수 있다.',
+    scoreB: 2,
+    images: [
+      {
+        src: '/images/q8-make-ten.jpg',
+        alt:
+          '유아 1단계 교재의 ’10 만들기’ 페이지. 두 가지 색깔의 구체물로 10을 만드는 여러 방법을 찾아 식으로 표현해 보는 활동입니다.',
+        label: '유아 1단계',
+      },
+    ],
+    options: [
+      { value: 'A', label: '아직 어려워해요' },
+      { value: 'B', label: '말할 수 있어요' },
+    ],
+  },
+  {
+    id: 9,
+    type: 'choice',
+    title: '수의 크기를 비교하는 것이 어렵지 않다.',
+    scoreB: 2,
+    images: [
+      {
+        src: '/images/q9-compare.jpg',
+        alt:
+          '유아 2단계 교재의 ’수의 크기 비교하기’ 페이지. 수 카드와 수 막대 카드를 놓고 더 큰 수와 작은 수를 기호 카드로 비교하는 활동입니다.',
+        label: '유아 2단계',
+      },
+    ],
+    options: [
+      { value: 'A', label: '아직 어려워해요' },
+      { value: 'B', label: '어렵지 않아요' },
+    ],
+  },
+  {
+    id: 10,
+    type: 'choice',
+    title: '수를 단순히 읽는 것을 넘어 ‘양’으로 이해하고 있다.',
+    scoreB: 2,
+    images: [
+      {
+        src: '/images/q10-number-chart.jpg',
+        alt:
+          '유아 1단계 교재의 수배열표. 6부터 50까지의 수가 낱개 블록과 10 묶음 막대 그림과 함께 나란히 놓여 있습니다.',
+        label: '유아 1단계',
+      },
+    ],
+    options: [
+      { value: 'A', label: '아직 어려워해요' },
+      { value: 'B', label: '이해하고 있어요' },
     ],
   },
 ];

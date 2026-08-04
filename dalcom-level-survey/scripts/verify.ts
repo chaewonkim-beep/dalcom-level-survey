@@ -1,79 +1,76 @@
 /* 결과 계산 로직 검증 스크립트 (npm run verify) */
-import { calculateResult } from '../src/lib/calculateResult';
-import { MAX_TOTAL_SCORE } from '../src/config/survey.config';
-import { LEVEL_2_CRITERIA } from '../src/config/result.config';
+import { calculateResult, countNumeracyB } from '../src/lib/calculateResult';
+import { MAX_TOTAL_SCORE, TOTAL_QUESTIONS } from '../src/config/survey.config';
+import {
+  LEVEL_2_CRITERIA,
+  NUMERACY_QUESTION_IDS,
+} from '../src/config/result.config';
 import type { AgeGroup, Answers, SurveyResult } from '../src/types/survey';
 
+/** 2~10번을 A/B 로 채운 답변 만들기 */
 const build = (age: string, choices: Record<number, 'A' | 'B'>): Answers => {
   const a: Answers = { 1: age as never };
-  for (let id = 2; id <= 11; id++) a[id] = choices[id] ?? 'A';
+  for (let id = 2; id <= 10; id++) a[id] = choices[id] ?? 'A';
   return a;
 };
+/** 수·연산 6문항 중 n개만 '가능' */
+const numeracy = (n: number): Record<number, 'A' | 'B'> => {
+  const c: Record<number, 'A' | 'B'> = {};
+  NUMERACY_QUESTION_IDS.slice(0, n).forEach((id) => (c[id] = 'B'));
+  return c;
+};
 const allB: Record<number, 'A' | 'B'> = {};
-for (let i = 2; i <= 11; i++) allB[i] = 'B';
+for (let i = 2; i <= 10; i++) allB[i] = 'B';
 
 let pass = 0, fail = 0;
 const check = (name: string, got: SurveyResult, want: Partial<SurveyResult>) => {
-  const ok = Object.entries(want).every(([k, v]) => (got as never as Record<string, unknown>)[k] === v);
+  const ok = Object.entries(want).every(
+    ([k, v]) => (got as never as Record<string, unknown>)[k] === v,
+  );
   console.log(`${ok ? 'PASS' : 'FAIL'}  ${name} → ${JSON.stringify(got)}`);
   ok ? pass++ : fail++;
 };
 
-console.log('만점:', MAX_TOTAL_SCORE, '\n');
+console.log(`총 ${TOTAL_QUESTIONS}문항 · 만점 ${MAX_TOTAL_SCORE}점`);
+console.log(`기준 — 5세 ${LEVEL_2_CRITERIA.AGE_5?.minNumeracyB}개 / 6~7세 ${LEVEL_2_CRITERIA.AGE_6_7?.minNumeracyB}개\n`);
 
 /* ---------- 4세: 무조건 1단계 ---------- */
-check('4세 / 전부 B', calculateResult(build('AGE_4', allB)), { level: 1, reason: 'AGE', totalScore: 13 });
+check('4세 / 전부 B(만점)', calculateResult(build('AGE_4', allB)), { level: 1, reason: 'AGE', totalScore: 15 });
 check('4세 / 전부 A', calculateResult(build('AGE_4', {})), { level: 1, reason: 'AGE', totalScore: 0 });
 
-/* ---------- 조건 ①만 충족: 총점 ---------- */
-// 5세 / 5~7번 중 6번 A → 총점 11 (조건① 충족)
-check('5세 / 총점11만 충족(6번 A)',
-  calculateResult(build('AGE_5', { ...allB, 6: 'A' })),
-  { level: 2, reason: 'LEVEL_2_READY', totalScore: 11 });
-// 6~7세 / 총점 9만 충족: 5·6번 B(4점) + 2,3,4,8,9번 B(5점) = 9점, 7번 A, 준비도 3개
-check('6~7세 / 총점9 충족',
-  calculateResult(build('AGE_6_7', { 2: 'B', 3: 'B', 4: 'B', 5: 'B', 6: 'B', 8: 'B', 9: 'B' })),
-  { level: 2, reason: 'LEVEL_2_READY', totalScore: 9 });
+/* ---------- 5세: 수·연산 5개 이상 ---------- */
+check('5세 / 수연산 6개', calculateResult(build('AGE_5', numeracy(6))), { level: 2, reason: 'LEVEL_2_READY' });
+check('5세 / 수연산 5개 (경계 통과)', calculateResult(build('AGE_5', numeracy(5))), { level: 2, reason: 'LEVEL_2_READY' });
+check('5세 / 수연산 4개 (1개 부족)', calculateResult(build('AGE_5', numeracy(4))), { level: 1, reason: 'MORE_FOUNDATION_NEEDED' });
+check('5세 / 수연산 3개', calculateResult(build('AGE_5', numeracy(3))), { level: 1, reason: 'CORE_NOT_READY' });
+check('5세 / 수연산 0개', calculateResult(build('AGE_5', {})), { level: 1, reason: 'CORE_NOT_READY', totalScore: 0 });
 
-/* ---------- 조건 ②만 충족: 5~7번 모두 B ---------- */
-check('5세 / 5~7번만 B (총점6)',
-  calculateResult(build('AGE_5', { 5: 'B', 6: 'B', 7: 'B' })),
-  { level: 2, reason: 'LEVEL_2_READY', totalScore: 6 });
-check('6~7세 / 5~7번만 B (총점6)',
-  calculateResult(build('AGE_6_7', { 5: 'B', 6: 'B', 7: 'B' })),
-  { level: 2, reason: 'LEVEL_2_READY', totalScore: 6 });
+/* ---------- 6~7세: 수·연산 4개 이상 ---------- */
+check('6~7세 / 수연산 4개 (경계 통과)', calculateResult(build('AGE_6_7', numeracy(4))), { level: 2, reason: 'LEVEL_2_READY' });
+check('6~7세 / 수연산 3개 (1개 부족)', calculateResult(build('AGE_6_7', numeracy(3))), { level: 1, reason: 'MORE_FOUNDATION_NEEDED' });
+check('6~7세 / 수연산 2개', calculateResult(build('AGE_6_7', numeracy(2))), { level: 1, reason: 'CORE_NOT_READY' });
 
-/* ---------- 조건 ③만 충족: 준비도 B 개수 ---------- */
-// 5세 / 4·8·9·10번 B = 준비도 4개, 총점 4점
-check('5세 / 준비도4만 충족 (총점4)',
-  calculateResult(build('AGE_5', { 4: 'B', 8: 'B', 9: 'B', 10: 'B' })),
-  { level: 2, reason: 'LEVEL_2_READY', totalScore: 4 });
-// 6~7세 / 4·8·9번 B = 준비도 3개, 총점 3점
-check('6~7세 / 준비도3만 충족 (총점3)',
-  calculateResult(build('AGE_6_7', { 4: 'B', 8: 'B', 9: 'B' })),
-  { level: 2, reason: 'LEVEL_2_READY', totalScore: 3 });
+/* ---------- 사고력 문항은 판정에 영향 없음 ---------- */
+const thinkOnly = { 2: 'B', 3: 'B', 4: 'B', ...numeracy(4) } as Record<number, 'A' | 'B'>;
+check('5세 / 사고력 3개 다 B여도 수연산 4개면 1단계',
+  calculateResult(build('AGE_5', thinkOnly)), { level: 1, reason: 'MORE_FOUNDATION_NEEDED' });
+check('5세 / 사고력 0개여도 수연산 5개면 2단계',
+  calculateResult(build('AGE_5', numeracy(5))), { level: 2, reason: 'LEVEL_2_READY' });
 
-/* ---------- 셋 다 미달 → 1단계 ---------- */
-check('5세 / 전부 A', calculateResult(build('AGE_5', {})), { level: 1, reason: 'CORE_NOT_READY', totalScore: 0 });
-// 5세 경계 바로 아래: 총점 9, 준비도 3개, 7번 A → 세 조건 모두 미달
-check('5세 / 총점9·준비도3 (경계 아래)',
-  calculateResult(build('AGE_5', { 2: 'B', 3: 'B', 4: 'B', 5: 'B', 6: 'B', 8: 'B', 9: 'B' })),
-  { level: 1, reason: 'CORE_NOT_READY', totalScore: 9 });
-// 6~7세 경계 바로 아래: 총점 8, 준비도 2개, 7번 A → 세 조건 모두 미달
-check('6~7세 / 총점8·준비도2 (경계 아래)',
-  calculateResult(build('AGE_6_7', { 2: 'B', 3: 'B', 5: 'B', 6: 'B', 8: 'B', 9: 'B' })),
-  { level: 1, reason: 'CORE_NOT_READY', totalScore: 8 });
+/* ---------- 배점 확인 ---------- */
+check('만점 15점 (사고력 3 + 수연산 12)', calculateResult(build('AGE_5', allB)), { totalScore: 15 });
+check('사고력만 3개 → 3점', calculateResult(build('AGE_5', { 2: 'B', 3: 'B', 4: 'B' })), { totalScore: 3 });
+check('수연산만 6개 → 12점', calculateResult(build('AGE_5', numeracy(6))), { totalScore: 12 });
 
-/* ---------- 전수 검사 (3 x 1024 = 3072가지) ---------- */
-const CORE = [5, 6, 7];
-const READY = [4, 8, 9, 10, 11];
-const SCORE: Record<number, number> = { 2:1, 3:1, 4:1, 5:2, 6:2, 7:2, 8:1, 9:1, 10:1, 11:1 };
+/* ---------- 전수 검사 (3 x 512 = 1536가지) ---------- */
+const SCORE: Record<number, number> = { 2: 1, 3: 1, 4: 1, 5: 2, 6: 2, 7: 2, 8: 2, 9: 2, 10: 2 };
 let mismatch = 0;
 const reasonCount: Record<string, number> = {};
+const levelCount: Record<string, number> = {};
 for (const age of ['AGE_4', 'AGE_5', 'AGE_6_7'] as AgeGroup[]) {
-  for (let mask = 0; mask < 1024; mask++) {
+  for (let mask = 0; mask < 512; mask++) {
     const ch: Record<number, 'A' | 'B'> = {};
-    for (let i = 0; i < 10; i++) ch[i + 2] = (mask >> i) & 1 ? 'B' : 'A';
+    for (let i = 0; i < 9; i++) ch[i + 2] = (mask >> i) & 1 ? 'B' : 'A';
     const answers = build(age, ch);
     const got = calculateResult(answers);
 
@@ -83,17 +80,22 @@ for (const age of ['AGE_4', 'AGE_5', 'AGE_6_7'] as AgeGroup[]) {
     let want: SurveyResult;
     if (c === null) want = { level: 1, reason: 'AGE', totalScore: total };
     else {
-      const coreAllB = CORE.every((id) => ch[id] === 'B');
-      const readyB = READY.filter((id) => ch[id] === 'B').length;
-      want = (total >= c.minTotalScore || coreAllB || readyB >= c.minReadinessB)
+      const nb = NUMERACY_QUESTION_IDS.filter((id) => ch[id] === 'B').length;
+      const short = c.minNumeracyB - nb;
+      want = short <= 0
         ? { level: 2, reason: 'LEVEL_2_READY', totalScore: total }
-        : { level: 1, reason: coreAllB ? 'MORE_FOUNDATION_NEEDED' : 'CORE_NOT_READY', totalScore: total };
+        : { level: 1, reason: short === 1 ? 'MORE_FOUNDATION_NEEDED' : 'CORE_NOT_READY', totalScore: total };
     }
     if (JSON.stringify(got) !== JSON.stringify(want)) mismatch++;
+    if (countNumeracyB(answers) !== NUMERACY_QUESTION_IDS.filter((id) => ch[id] === 'B').length) mismatch++;
     reasonCount[got.reason] = (reasonCount[got.reason] ?? 0) + 1;
+    levelCount[got.level] = (levelCount[got.level] ?? 0) + 1;
   }
 }
-check('전수 검사 3072가지 모두 일치', { level: 1, reason: 'AGE', totalScore: mismatch } as SurveyResult, { totalScore: 0 });
+check('전수 검사 1536가지 모두 일치',
+  { level: 1, reason: 'AGE', totalScore: mismatch } as SurveyResult, { totalScore: 0 });
+
 console.log('\n사유별 분포:', reasonCount);
+console.log('단계별 분포:', levelCount);
 console.log(`\n결과: ${pass} passed, ${fail} failed`);
 if (fail > 0) process.exit(1);

@@ -97,10 +97,8 @@ export type Question = AgeQuestion | ChoiceQuestion;
 /* ---------------------------- 결과 콘텐츠 ---------------------------- */
 
 export interface LevelCriteria {
-  /** 유아 2단계 추천에 필요한 최소 총점 */
-  minTotalScore: number;
-  /** 4번 + 8~11번 중 B가 최소 몇 개 필요한지 */
-  minReadinessB: number;
+  /** 유아 2단계 추천에 필요한 수·연산 문항(5~10번) '가능' 최소 개수 */
+  minNumeracyB: number;
 }
 
 /** 설명 없이 이미지만 보여줄 때 쓰는 최소 정보 */

@@ -21,16 +21,15 @@ var HEADERS = [
   '시작시각',
   '완료시각',
   '연령',
-  '2번 달콤 프로젝트 경험',
-  '3번 사고력 문제집 경험',
-  '4번 문제 이해',
-  '5번 개수 세기',
-  '6번 가르기 모으기',
-  '7번 덧셈 뺄셈',
-  '8번 위치 이해',
-  '9번 패턴',
-  '10번 게임 규칙',
-  '11번 스스로 시도',
+  '2번 사고력 경험',
+  '3번 문제 이해',
+  '4번 게임 규칙',
+  '5번 거꾸로 세기',
+  '6번 한 자리 수 연산',
+  '7번 두 개씩 묶어 세기',
+  '8번 10의 짝꿍 수',
+  '9번 수의 크기 비교',
+  '10번 수를 양으로 이해',
   '총점',
   '추천 단계',
   '판정 사유',
@@ -44,9 +43,9 @@ var AGE_LABEL = { AGE_4: '4세', AGE_5: '5세', AGE_6_7: '6~7세' };
 var LEVEL_LABEL = { 1: '유아 1단계', 2: '유아 2단계' };
 var REASON_LABEL = {
   AGE: '4세',
-  CORE_NOT_READY: '조건 미달',
-  MORE_FOUNDATION_NEEDED: '기초 보완 필요',
-  LEVEL_2_READY: '2단계 조건 충족',
+  CORE_NOT_READY: '수·연산 기초 필요',
+  MORE_FOUNDATION_NEEDED: '1개 차이로 미달',
+  LEVEL_2_READY: '2단계 기준 충족',
 };
 
 function doPost(e) {
@@ -91,7 +90,7 @@ function saveEvent(data) {
   if (data.event === 'complete') {
     setCell(sheet, row, '완료시각', now);
     setCell(sheet, row, '연령', AGE_LABEL[data.ageGroup] || data.ageGroup || '');
-    for (var id = 2; id <= 11; id++) {
+    for (var id = 2; id <= 10; id++) {
       var header = findHeaderByQuestion(id);
       if (header) setCell(sheet, row, header, (data.answers && data.answers[id]) || '');
     }

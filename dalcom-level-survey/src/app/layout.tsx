@@ -10,7 +10,7 @@ const SITE_URL =
 
 const TITLE = '우리 아이는 유아 1단계? 유아 2단계?';
 const DESCRIPTION =
-  '아이의 연령, 경험, 현재 수준을 확인하고 우리 아이에게 맞는 단계를 찾아보세요. 약 1분 · 총 11문항';
+  '아이의 연령, 경험, 현재 수준을 확인하고 우리 아이에게 맞는 단계를 찾아보세요. 약 1분 · 총 10문항';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

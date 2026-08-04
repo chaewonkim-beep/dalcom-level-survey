@@ -100,7 +100,7 @@ export function trackComplete(
   startedAt: number,
 ): void {
   const choices: Record<number, string> = {};
-  for (let id = 2; id <= 11; id++) {
+  for (let id = 2; id <= 10; id++) {
     const value = answers[id];
     if (typeof value === 'string') choices[id] = value;
   }

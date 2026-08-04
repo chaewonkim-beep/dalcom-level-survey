@@ -1,19 +1,10 @@
+import { CHOICE_QUESTIONS, QUESTIONS } from '@/config/survey.config';
 import {
-  CHOICE_QUESTIONS,
-  CHOICE_QUESTION_MAP,
-  QUESTIONS,
-} from '@/config/survey.config';
-import {
-  CORE_QUESTION_IDS,
   LEVEL_2_CRITERIA,
-  READINESS_QUESTION_IDS,
+  NUMERACY_QUESTION_IDS,
+  THINKING_QUESTION_IDS,
 } from '@/config/result.config';
-import type {
-  AgeGroup,
-  Answers,
-  Choice,
-  SurveyResult,
-} from '@/types/survey';
+import type { AgeGroup, Answers, SurveyResult } from '@/types/survey';
 
 /* ==================================================================
  * 결과 계산 (순수 함수)
@@ -22,7 +13,7 @@ import type {
  * 외부 상태를 읽거나 바꾸지 않습니다.
  * ================================================================== */
 
-/** 총점 계산 — 모든 문항에서 A는 0점, B는 문항별 scoreB */
+/** 총점 — A는 0점, B는 문항별 scoreB (사고력 1점 · 수·연산 2점, 만점 15점) */
 export function calculateTotalScore(answers: Answers): number {
   return CHOICE_QUESTIONS.reduce(
     (sum, q) => (answers[q.id] === 'B' ? sum + q.scoreB : sum),
@@ -38,6 +29,16 @@ export function countB(
   return questionIds.filter((id) => answers[id] === 'B').length;
 }
 
+/** 수·연산 6문항(5~10번) 중 '가능'을 고른 개수 */
+export function countNumeracyB(answers: Answers): number {
+  return countB(answers, NUMERACY_QUESTION_IDS);
+}
+
+/** 사고력 3문항(2~4번) 중 B를 고른 개수 — 결과 문구 참고용 */
+export function countThinkingB(answers: Answers): number {
+  return countB(answers, THINKING_QUESTION_IDS);
+}
+
 /** 모든 문항에 답했는지 확인 */
 export function isComplete(answers: Answers): boolean {
   return QUESTIONS.every((q) => answers[q.id] !== undefined);
@@ -47,15 +48,13 @@ export function isComplete(answers: Answers): boolean {
  * 설문 결과를 계산합니다.
  *
  * 판정 순서
- *  1. 4세 → 점수와 관계없이 유아 1단계 (AGE)
- *  2. 연령별 세 조건 중 **하나라도** 충족하면 유아 2단계 (LEVEL_2_READY)
- *       ① 총점이 기준 이상
- *       ② 5~7번이 모두 B
- *       ③ 4번과 8~11번 중 B가 기준 개수 이상
- *  3. 셋 다 못 채우면 유아 1단계
- *       - 5~7번에 A가 있으면            → CORE_NOT_READY
- *       - (5~7번은 모두 B인 경우)        → MORE_FOUNDATION_NEEDED
- *         ※ 5~7번이 모두 B면 조건 ②로 이미 2단계가 되므로 실제로는 나오지 않습니다.
+ *  1. 4세                         → 유아 1단계 (AGE)
+ *  2. 수·연산 '가능'이 기준 이상   → 유아 2단계 (LEVEL_2_READY)
+ *  3. 기준에 1개 모자람            → 유아 1단계 (MORE_FOUNDATION_NEEDED)
+ *  4. 2개 이상 모자람              → 유아 1단계 (CORE_NOT_READY)
+ *
+ * 연령별 기준은 result.config.ts 의 LEVEL_2_CRITERIA 에서 바꿉니다.
+ * 사고력 3문항은 판정에 쓰지 않습니다.
  */
 export function calculateResult(answers: Answers): SurveyResult {
   const totalScore = calculateTotalScore(answers);
@@ -69,35 +68,33 @@ export function calculateResult(answers: Answers): SurveyResult {
     return { level: 1, reason: 'AGE', totalScore };
   }
 
-  const coreAllB = CORE_QUESTION_IDS.every((id) => answers[id] === 'B');
-  const readinessB = countB(answers, READINESS_QUESTION_IDS);
+  const numeracyB = countNumeracyB(answers);
+  const shortfall = criteria.minNumeracyB - numeracyB;
 
-  // 2) 세 조건 중 하나라도 충족하면 유아 2단계
-  const meetsScore = totalScore >= criteria.minTotalScore;
-  const meetsReadiness = readinessB >= criteria.minReadinessB;
-
-  if (meetsScore || coreAllB || meetsReadiness) {
+  // 2) 기준을 채웠으면 유아 2단계
+  if (shortfall <= 0) {
     return { level: 2, reason: 'LEVEL_2_READY', totalScore };
   }
 
-  // 3) 하나도 충족하지 못하면 유아 1단계
-  return {
-    level: 1,
-    reason: coreAllB ? 'MORE_FOUNDATION_NEEDED' : 'CORE_NOT_READY',
-    totalScore,
-  };
+  // 3) 한 문항 차이로 아깝게 미달
+  if (shortfall === 1) {
+    return { level: 1, reason: 'MORE_FOUNDATION_NEEDED', totalScore };
+  }
+
+  // 4) 그 외에는 기초를 더 다질 시점
+  return { level: 1, reason: 'CORE_NOT_READY', totalScore };
 }
 
-/** 결과 화면 보조 표시용 — 문항별 획득 점수 (디버깅/상담용) */
+/** 상담·디버깅용 — 문항별 획득 점수 */
 export function getScoreBreakdown(
   answers: Answers,
-): Array<{ id: number; choice: Choice | undefined; score: number }> {
+): Array<{ id: number; choice: string | undefined; score: number }> {
   return CHOICE_QUESTIONS.map((q) => {
-    const choice = answers[q.id] as Choice | undefined;
+    const choice = answers[q.id];
     return {
       id: q.id,
-      choice,
-      score: choice === 'B' ? CHOICE_QUESTION_MAP[q.id].scoreB : 0,
+      choice: typeof choice === 'string' ? choice : undefined,
+      score: choice === 'B' ? q.scoreB : 0,
     };
   });
 }
