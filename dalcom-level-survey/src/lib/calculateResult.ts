@@ -48,13 +48,14 @@ export function isComplete(answers: Answers): boolean {
  * 설문 결과를 계산합니다.
  *
  * 판정 순서
- *  1. 4세                         → 유아 1단계 (AGE)
- *  2. 수·연산 '가능'이 기준 이상   → 유아 2단계 (LEVEL_2_READY)
- *  3. 기준에 1개 모자람            → 유아 1단계 (MORE_FOUNDATION_NEEDED)
- *  4. 2개 이상 모자람              → 유아 1단계 (CORE_NOT_READY)
+ *  1. 4세                          → 유아 1단계 (AGE)
+ *  2. 수·연산이 기준에 2개 이상 모자람 → 유아 1단계 (CORE_NOT_READY)
+ *  3. 수·연산이 1개 모자람           → 유아 1단계 (MORE_FOUNDATION_NEEDED)
+ *  4. 수·연산은 충분하지만
+ *     사고력이 기준 미만            → 유아 1단계 (THINKING_NOT_READY)
+ *  5. 둘 다 충족                    → 유아 2단계 (LEVEL_2_READY)
  *
  * 연령별 기준은 result.config.ts 의 LEVEL_2_CRITERIA 에서 바꿉니다.
- * 사고력 3문항은 판정에 쓰지 않습니다.
  */
 export function calculateResult(answers: Answers): SurveyResult {
   const totalScore = calculateTotalScore(answers);
@@ -71,9 +72,9 @@ export function calculateResult(answers: Answers): SurveyResult {
   const numeracyB = countNumeracyB(answers);
   const shortfall = criteria.minNumeracyB - numeracyB;
 
-  // 2) 기준을 채웠으면 유아 2단계
-  if (shortfall <= 0) {
-    return { level: 2, reason: 'LEVEL_2_READY', totalScore };
+  // 2) 수·연산이 2개 이상 모자라면 기초부터
+  if (shortfall >= 2) {
+    return { level: 1, reason: 'CORE_NOT_READY', totalScore };
   }
 
   // 3) 한 문항 차이로 아깝게 미달
@@ -81,8 +82,13 @@ export function calculateResult(answers: Answers): SurveyResult {
     return { level: 1, reason: 'MORE_FOUNDATION_NEEDED', totalScore };
   }
 
-  // 4) 그 외에는 기초를 더 다질 시점
-  return { level: 1, reason: 'CORE_NOT_READY', totalScore };
+  // 4) 수·연산은 충분하지만 사고력 경험이 부족
+  if (countThinkingB(answers) < criteria.minThinkingB) {
+    return { level: 1, reason: 'THINKING_NOT_READY', totalScore };
+  }
+
+  // 5) 둘 다 충족
+  return { level: 2, reason: 'LEVEL_2_READY', totalScore };
 }
 
 /** 상담·디버깅용 — 문항별 획득 점수 */

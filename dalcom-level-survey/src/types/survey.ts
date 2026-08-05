@@ -21,10 +21,12 @@ export type Level = 1 | 2;
 export type ResultReason =
   /** 4세 → 점수와 관계없이 유아 1단계 */
   | 'AGE'
-  /** 핵심 수·연산 문항(5~7번)에 A가 있어 유아 1단계 */
+  /** 수·연산 준비가 기준에 여유 있게 못 미쳐 유아 1단계 */
   | 'CORE_NOT_READY'
-  /** 5~7번은 모두 B지만 총점/준비도 조건 미달로 유아 1단계 */
+  /** 수·연산이 한 문항 차이로 아깝게 미달해 유아 1단계 */
   | 'MORE_FOUNDATION_NEEDED'
+  /** 수·연산은 충분하지만 사고력 경험이 부족해 유아 1단계 */
+  | 'THINKING_NOT_READY'
   /** 모든 조건 충족 → 유아 2단계 */
   | 'LEVEL_2_READY';
 
@@ -99,6 +101,11 @@ export type Question = AgeQuestion | ChoiceQuestion;
 export interface LevelCriteria {
   /** 유아 2단계 추천에 필요한 수·연산 문항(5~10번) '가능' 최소 개수 */
   minNumeracyB: number;
+  /**
+   * 유아 2단계 추천에 필요한 사고력 문항(2~4번) B 최소 개수.
+   * 수·연산 기준을 채워도 이 개수를 못 채우면 유아 1단계입니다.
+   */
+  minThinkingB: number;
 }
 
 /** 설명 없이 이미지만 보여줄 때 쓰는 최소 정보 */

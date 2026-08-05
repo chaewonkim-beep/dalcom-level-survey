@@ -18,22 +18,24 @@ import type {
 export const NUMERACY_QUESTION_IDS = [5, 6, 7, 8, 9, 10] as const;
 
 /**
- * 사고력 문항 (2~4번) — 판정에는 쓰지 않고,
- * 결과 화면 안내 문구를 고르는 참고 자료로 씁니다.
+ * 사고력 문항 (2~4번) — 최소 조건으로 씁니다.
+ * 수·연산 기준을 채워도 여기서 B가 minThinkingB 개 미만이면 유아 1단계입니다.
  */
 export const THINKING_QUESTION_IDS = [2, 3, 4] as const;
 
 /**
  * 연령별 유아 2단계 추천 기준.
- * 수·연산 6문항 중 '가능'이 minNumeracyB 개 이상이면 유아 2단계입니다.
+ * 아래 두 가지를 **모두** 채워야 유아 2단계입니다.
+ *   ① 수·연산 6문항 중 '할 수 있어요'가 minNumeracyB 개 이상
+ *   ② 사고력 3문항 중 B가 minThinkingB 개 이상
  * null = 점수와 관계없이 유아 1단계 (4세)
  *
  * 개수 기준은 응답이 쌓이면 여기 숫자만 바꿔서 조정하면 됩니다.
  */
 export const LEVEL_2_CRITERIA: Record<AgeGroup, LevelCriteria | null> = {
   AGE_4: null,
-  AGE_5: { minNumeracyB: 5 },
-  AGE_6_7: { minNumeracyB: 4 },
+  AGE_5: { minNumeracyB: 5, minThinkingB: 1 },
+  AGE_6_7: { minNumeracyB: 4, minThinkingB: 1 },
 };
 
 /** 연령 선택값 → 화면 표기 */
@@ -110,6 +112,10 @@ export const REASON_NOTES: Record<ResultReason, ReasonNote> = {
   MORE_FOUNDATION_NEEDED: {
     title: '조금만 더 하면 유아 2단계예요',
     body: '수와 연산 대부분이 준비되어 있고, 한 가지만 더 익숙해지면 유아 2단계를 시작할 수 있어요. 지금은 유아 1단계로 그 부분을 채우는 편이 아이에게 편안합니다.',
+  },
+  THINKING_NOT_READY: {
+    title: '사고력 활동 경험을 조금만 더 쌓으면 좋아요',
+    body: '수와 연산은 잘 준비되어 있어요. 다만 문제를 스스로 읽고 이해하거나 규칙을 지키며 활동하는 경험이 아직 적어요. 유아 1단계에서 이 부분을 채우면 유아 2단계 활동을 훨씬 편안하게 소화할 수 있어요.',
   },
   LEVEL_2_READY: {
     title: '유아 2단계를 시작하기에 좋은 시점이에요',
