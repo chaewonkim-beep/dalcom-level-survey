@@ -71,7 +71,7 @@ export const CHOICE_QUESTIONS: ChoiceQuestion[] = [
   {
     id: 3,
     type: 'choice',
-    title: '사고력 문제를 풀거나 새로운 활동을 시작할 때',
+    title: '사고력 문제를 스스로 읽고 이해해 풀 수 있나요?',
     scoreB: 1,
     images: [
       {
@@ -89,7 +89,7 @@ export const CHOICE_QUESTIONS: ChoiceQuestion[] = [
   {
     id: 4,
     type: 'choice',
-    title: '규칙이 있는 게임을 할 때',
+    title: '규칙이 있는 게임을 잘 할 수 있나요?',
     scoreB: 1,
     images: [
       {
@@ -112,7 +112,7 @@ export const CHOICE_QUESTIONS: ChoiceQuestion[] = [
   {
     id: 5,
     type: 'choice',
-    title: '수를 20에서부터 거꾸로 세어 내려갈 수 있다.',
+    title: '수를 20에서부터 거꾸로 세어 내려갈 수 있나요?',
     scoreB: 2,
     images: [
       {
@@ -130,7 +130,7 @@ export const CHOICE_QUESTIONS: ChoiceQuestion[] = [
   {
     id: 6,
     type: 'choice',
-    title: '한 자리 수의 연산을 천천히 할 수 있다.',
+    title: '한 자리 수의 연산을 천천히 할 수 있나요?',
     scoreB: 2,
     images: [
       {
@@ -148,7 +148,7 @@ export const CHOICE_QUESTIONS: ChoiceQuestion[] = [
   {
     id: 7,
     type: 'choice',
-    title: '두 개씩 묶어 셀 수 있다.',
+    title: '두 개씩 묶어 셀 수 있나요?',
     scoreB: 2,
     images: [
       {
@@ -166,7 +166,7 @@ export const CHOICE_QUESTIONS: ChoiceQuestion[] = [
   {
     id: 8,
     type: 'choice',
-    title: '더해서 10이 되는 두 수를 말할 수 있다.',
+    title: '더해서 10이 되는 두 수를 말할 수 있나요?',
     scoreB: 2,
     images: [
       {
@@ -184,7 +184,7 @@ export const CHOICE_QUESTIONS: ChoiceQuestion[] = [
   {
     id: 9,
     type: 'choice',
-    title: '수의 크기를 비교할 수 있다.',
+    title: '수의 크기를 비교할 수 있나요?',
     scoreB: 2,
     images: [
       {
@@ -202,7 +202,7 @@ export const CHOICE_QUESTIONS: ChoiceQuestion[] = [
   {
     id: 10,
     type: 'choice',
-    title: '수를 단순히 읽는 것을 넘어 ‘양’으로 이해할 수 있다.',
+    title: '수를 단순히 읽는 것을 넘어 ‘양’으로 이해할 수 있나요?',
     scoreB: 2,
     images: [
       {
