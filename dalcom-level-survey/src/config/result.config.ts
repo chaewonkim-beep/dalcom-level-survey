@@ -66,7 +66,7 @@ export const RESULT_CONTENT: Record<Level, ResultContent> = {
       alt: '유아 1단계 학부모 후기. 수학을 습득하는 과정이 놀이로 구성되어 있어 아이가 참 좋아하고, 매번 계속하겠다고 투정부린다는 내용입니다.',
     },
     cta: {
-      label: '유아 1단계 자세히 보기',
+      label: '지금 시작하기',
       href: 'https://mkt.shopping.naver.com/link/68395a398f1c490586c4c68a',
     },
   },
@@ -89,7 +89,7 @@ export const RESULT_CONTENT: Record<Level, ResultContent> = {
       alt: '유아 2단계 학부모 후기. 아이가 먼저 숫자놀이를 하자고 하고, 46개월인 지금 수량일치, 직산, 가르기 모으기, 10까지 연산을 할 수 있게 되었다는 내용입니다.',
     },
     cta: {
-      label: '유아 2단계 자세히 보기',
+      label: '지금 시작하기',
       href: 'https://mkt.shopping.naver.com/link/68395a389afe254322008372',
     },
   },
