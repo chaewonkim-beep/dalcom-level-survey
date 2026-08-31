@@ -32,6 +32,7 @@ var HEADERS = [
   '10번 수를 양으로 이해',
   '총점',
   '추천 단계',
+  '선택한 단계',
   '판정 사유',
   '소요시간(초)',
   '상세보기 클릭',
@@ -96,6 +97,9 @@ function saveEvent(data) {
     }
     setCell(sheet, row, '총점', data.totalScore);
     setCell(sheet, row, '추천 단계', LEVEL_LABEL[data.level] || data.level);
+    // 예외 케이스에서 학부모가 직접 고른 경우에만 채워집니다
+    setCell(sheet, row, '선택한 단계',
+      data.chosenLevel ? (LEVEL_LABEL[data.chosenLevel] || data.chosenLevel) : '');
     setCell(sheet, row, '판정 사유', REASON_LABEL[data.reason] || data.reason);
     if (data.durationSec != null) setCell(sheet, row, '소요시간(초)', data.durationSec);
     // 시작 이벤트가 유실됐을 때를 대비

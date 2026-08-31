@@ -2,6 +2,7 @@ import { CHOICE_QUESTIONS, QUESTIONS } from '@/config/survey.config';
 import {
   LEVEL_2_CRITERIA,
   NUMERACY_QUESTION_IDS,
+  THINKING_OVERRIDE_NUMERACY,
   THINKING_QUESTION_IDS,
 } from '@/config/result.config';
 import type { AgeGroup, Answers, SurveyResult } from '@/types/survey';
@@ -53,6 +54,7 @@ export function isComplete(answers: Answers): boolean {
  *  3. 수·연산이 1개 모자람           → 유아 1단계 (MORE_FOUNDATION_NEEDED)
  *  4. 수·연산은 충분하지만
  *     사고력이 기준 미만            → 유아 1단계 (THINKING_NOT_READY)
+ *     ※ 수·연산 6문항을 모두 할 수 있으면 이 조건을 면제합니다
  *  5. 둘 다 충족                    → 유아 2단계 (LEVEL_2_READY)
  *
  * 연령별 기준은 result.config.ts 의 LEVEL_2_CRITERIA 에서 바꿉니다.
@@ -83,12 +85,30 @@ export function calculateResult(answers: Answers): SurveyResult {
   }
 
   // 4) 수·연산은 충분하지만 사고력 경험이 부족
-  if (countThinkingB(answers) < criteria.minThinkingB) {
+  //    단, 수·연산을 모두 할 수 있으면(6/6) 사고력 조건을 면제합니다
+  const numeracyPerfect = numeracyB >= THINKING_OVERRIDE_NUMERACY;
+  if (!numeracyPerfect && countThinkingB(answers) < criteria.minThinkingB) {
     return { level: 1, reason: 'THINKING_NOT_READY', totalScore };
   }
 
   // 5) 둘 다 충족
   return { level: 2, reason: 'LEVEL_2_READY', totalScore };
+}
+
+/**
+ * 학부모가 직접 단계를 고르는 예외 케이스인지 판별합니다.
+ * 수·연산 6문항을 모두 할 수 있지만 사고력이 기준에 못 미치는 경우입니다.
+ * (이때는 결과를 바로 보여주지 않고 선택 화면을 먼저 띄웁니다)
+ */
+export function isLevelChoiceCase(answers: Answers): boolean {
+  const age = answers[1] as AgeGroup | undefined;
+  const criteria = age ? LEVEL_2_CRITERIA[age] : null;
+  if (!age || criteria === null) return false;
+
+  return (
+    countNumeracyB(answers) >= THINKING_OVERRIDE_NUMERACY &&
+    countThinkingB(answers) < criteria.minThinkingB
+  );
 }
 
 /** 상담·디버깅용 — 문항별 획득 점수 */

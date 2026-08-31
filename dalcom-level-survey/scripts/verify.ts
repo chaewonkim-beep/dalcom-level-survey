@@ -4,6 +4,7 @@ import { MAX_TOTAL_SCORE, TOTAL_QUESTIONS } from '../src/config/survey.config';
 import {
   LEVEL_2_CRITERIA,
   NUMERACY_QUESTION_IDS,
+  THINKING_OVERRIDE_NUMERACY,
 } from '../src/config/result.config';
 import type { AgeGroup, Answers, SurveyResult } from '../src/types/survey';
 
@@ -56,8 +57,13 @@ check('5세 / 수연산 5개 + 사고력 0개 → 1단계',
   calculateResult(build('AGE_5', numeracy(5, 0))), { level: 1, reason: 'THINKING_NOT_READY' });
 check('5세 / 수연산 5개 + 사고력 1개 → 2단계',
   calculateResult(build('AGE_5', numeracy(5, 1))), { level: 2, reason: 'LEVEL_2_READY' });
-check('6~7세 / 수연산 6개 + 사고력 0개 → 1단계',
-  calculateResult(build('AGE_6_7', numeracy(6, 0))), { level: 1, reason: 'THINKING_NOT_READY' });
+/* 예외 규칙: 수·연산 6/6이면 사고력 0개여도 2단계 */
+check('5세 / 수연산 6개(만점) + 사고력 0개 → 2단계 (예외)',
+  calculateResult(build('AGE_5', numeracy(6, 0))), { level: 2, reason: 'LEVEL_2_READY' });
+check('6~7세 / 수연산 6개(만점) + 사고력 0개 → 2단계 (예외)',
+  calculateResult(build('AGE_6_7', numeracy(6, 0))), { level: 2, reason: 'LEVEL_2_READY' });
+check('6~7세 / 수연산 5개 + 사고력 0개 → 1단계 (예외 아님)',
+  calculateResult(build('AGE_6_7', numeracy(5, 0))), { level: 1, reason: 'THINKING_NOT_READY' });
 check('6~7세 / 수연산 4개 + 사고력 1개 → 2단계',
   calculateResult(build('AGE_6_7', numeracy(4, 1))), { level: 2, reason: 'LEVEL_2_READY' });
 check('5세 / 사고력 3개여도 수연산 4개면 1단계',
@@ -66,7 +72,7 @@ check('5세 / 사고력 3개여도 수연산 4개면 1단계',
 /* ---------- 배점 확인 ---------- */
 check('만점 15점 (사고력 3 + 수연산 12)', calculateResult(build('AGE_5', allB)), { totalScore: 15 });
 check('사고력만 3개 → 3점', calculateResult(build('AGE_5', { 2: 'B', 3: 'B', 4: 'B' })), { totalScore: 3 });
-check('수연산만 6개 → 12점', calculateResult(build('AGE_5', numeracy(6, 0))), { totalScore: 12 });
+check('수연산만 6개 → 12점 · 2단계(예외)', calculateResult(build('AGE_5', numeracy(6, 0))), { totalScore: 12, level: 2 });
 
 /* ---------- 전수 검사 (3 x 512 = 1536가지) ---------- */
 const SCORE: Record<number, number> = { 2: 1, 3: 1, 4: 1, 5: 2, 6: 2, 7: 2, 8: 2, 9: 2, 10: 2 };
@@ -89,11 +95,12 @@ for (const age of ['AGE_4', 'AGE_5', 'AGE_6_7'] as AgeGroup[]) {
       const nb = NUMERACY_QUESTION_IDS.filter((id) => ch[id] === 'B').length;
       const tbCount = [2, 3, 4].filter((id) => ch[id] === 'B').length;
       const short = c.minNumeracyB - nb;
+      const perfect = nb >= THINKING_OVERRIDE_NUMERACY;
       want = short >= 2
         ? { level: 1, reason: 'CORE_NOT_READY', totalScore: total }
         : short === 1
           ? { level: 1, reason: 'MORE_FOUNDATION_NEEDED', totalScore: total }
-          : tbCount < c.minThinkingB
+          : !perfect && tbCount < c.minThinkingB
             ? { level: 1, reason: 'THINKING_NOT_READY', totalScore: total }
             : { level: 2, reason: 'LEVEL_2_READY', totalScore: total };
     }

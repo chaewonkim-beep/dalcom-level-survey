@@ -32,6 +32,8 @@ interface CompletePayload extends BasePayload {
   durationSec: number;
   device: string;
   referrer: string;
+  /** 예외 케이스에서 학부모가 직접 고른 단계 (아니면 생략) */
+  chosenLevel?: 1 | 2;
 }
 
 interface CtaPayload extends BasePayload {
@@ -98,6 +100,7 @@ export function trackComplete(
   answers: Answers,
   result: SurveyResult,
   startedAt: number,
+  chosenLevel?: 1 | 2 | null,
 ): void {
   const choices: Record<number, string> = {};
   for (let id = 2; id <= 10; id++) {
@@ -116,6 +119,7 @@ export function trackComplete(
     durationSec: Math.round((Date.now() - startedAt) / 1000),
     device: getDevice(),
     referrer: getReferrer(),
+    ...(chosenLevel ? { chosenLevel } : {}),
   });
 }
 

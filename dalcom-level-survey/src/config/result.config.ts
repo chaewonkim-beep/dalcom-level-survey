@@ -24,6 +24,14 @@ export const NUMERACY_QUESTION_IDS = [5, 6, 7, 8, 9, 10] as const;
 export const THINKING_QUESTION_IDS = [2, 3, 4] as const;
 
 /**
+ * 사고력 조건 면제 규칙.
+ * 수·연산 6문항을 '모두' 할 수 있으면, 사고력 3문항이 전부 A여도 유아 2단계로 봅니다.
+ * (수·연산이 완벽하면 활동 태도는 유아 2단계를 하면서 따라온다고 판단)
+ * 이 값을 7 이상으로 두면 면제 없이 항상 사고력 조건을 적용합니다.
+ */
+export const THINKING_OVERRIDE_NUMERACY = 6;
+
+/**
  * 연령별 유아 2단계 추천 기준.
  * 아래 두 가지를 **모두** 채워야 유아 2단계입니다.
  *   ① 수·연산 6문항 중 '할 수 있어요'가 minNumeracyB 개 이상
@@ -94,6 +102,21 @@ export const RESULT_CONTENT: Record<Level, ResultContent> = {
     },
   },
 };
+
+/**
+ * 예외 케이스(수·연산 6/6 · 사고력 0개)에서 보여주는 단계 선택 화면 문구.
+ * 이 경우에만 학부모가 직접 단계를 고릅니다.
+ */
+export const LEVEL_CHOICE_CONTENT = {
+  title: '목표에 따라\n단계가 달라져요',
+  description:
+    '수·연산은 충분한데 사고력 활동 경험이 적어요.\n아이 성향에 따라 나뉩니다.',
+  /** 위에서부터 보여줄 순서 */
+  options: [
+    { level: 2, reason: '수·연산 수준에 맞춰\n진행하려면', highlighted: true },
+    { level: 1, reason: '전 영역을 골고루\n채우고 싶다면', highlighted: false },
+  ],
+} as const;
 
 /**
  * 판정 사유별 추가 안내 문구.

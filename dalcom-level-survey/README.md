@@ -73,6 +73,7 @@ dalcom-level-survey/
     └── components/
         ├── SurveyApp.tsx          # 상태 관리 (start / question / result)
         ├── StartScreen.tsx        # 1. 시작 화면 (교재 표지 2장)
+        ├── LevelChoiceScreen.tsx  # 예외 케이스에서 단계 직접 고르기
         ├── ProgressBar.tsx        # 4. 진행률 표시
         ├── QuestionScreen.tsx     # 2·3. 한 화면에 한 문항
         ├── OptionGroup.tsx        # 접근성 라디오그룹 (키보드 · aria)
@@ -154,7 +155,14 @@ dalcom-level-survey/
 | 5세 | **5개 이상** |
 | 6~7세 | **4개 이상** |
 
-사고력 3문항(2~4번)은 판정에 쓰지 않습니다. 총점과 결과 문구 참고용입니다.
+사고력 3문항(2~4번)은 최소 조건으로 씁니다. 수·연산 기준을 채워도
+사고력 B가 `minThinkingB`(현재 1개) 미만이면 유아 1단계입니다.
+
+> **예외** — 수·연산 6문항을 **모두** 할 수 있는데 사고력이 기준 미만이면,
+> 결과를 바로 보여주지 않고 **학부모가 직접 단계를 고르는 화면**을 띄웁니다.
+> (`LevelChoiceScreen.tsx`, 문구는 `result.config.ts` 의 `LEVEL_CHOICE_CONTENT`)
+> 고른 단계는 스프레드시트 '선택한 단계' 열에 기록됩니다.
+> 판별 기준은 `THINKING_OVERRIDE_NUMERACY` 로 조절합니다. (7 이상이면 예외 없음)
 
 > 개수 기준은 응답이 쌓이면 `result.config.ts` 의 `minNumeracyB` 숫자만 바꿔서 조정하면 됩니다.
 

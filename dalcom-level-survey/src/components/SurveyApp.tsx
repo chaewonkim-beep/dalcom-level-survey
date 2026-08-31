@@ -1,19 +1,20 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import LevelChoiceScreen from './LevelChoiceScreen';
 import QuestionScreen from './QuestionScreen';
 import ResultScreen from './ResultScreen';
 import StartScreen from './StartScreen';
 import { QUESTIONS, TOTAL_QUESTIONS } from '@/config/survey.config';
-import { calculateResult } from '@/lib/calculateResult';
+import { calculateResult, isLevelChoiceCase } from '@/lib/calculateResult';
 import {
   createResponseId,
   trackComplete,
   trackStart,
 } from '@/lib/analytics';
-import type { AgeGroup, AnswerValue, Answers } from '@/types/survey';
+import type { AgeGroup, AnswerValue, Answers, Level } from '@/types/survey';
 
-type Step = 'start' | 'question' | 'result';
+type Step = 'start' | 'question' | 'choice' | 'result';
 
 /** 선택 후 다음 문항으로 자동 이동하기까지의 지연(ms) */
 const AUTO_ADVANCE_DELAY = 260;
@@ -22,6 +23,8 @@ export default function SurveyApp() {
   const [step, setStep] = useState<Step>('start');
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
+  /** 예외 케이스에서 학부모가 직접 고른 단계 */
+  const [chosenLevel, setChosenLevel] = useState<Level | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   /** 응답 수집용 — 개인 식별과 무관한 임의의 값 */
   const responseIdRef = useRef<string>('');
@@ -44,10 +47,11 @@ export default function SurveyApp() {
     clearTimer();
     if (index < TOTAL_QUESTIONS - 1) {
       setIndex(index + 1);
-    } else {
-      setStep('result');
+      return;
     }
-  }, [index]);
+    // 수·연산은 완벽하지만 사고력 경험이 적으면 학부모가 직접 고르게 합니다
+    setStep(isLevelChoiceCase(answers) ? 'choice' : 'result');
+  }, [index, answers]);
 
   const goPrev = useCallback(() => {
     clearTimer();
@@ -68,6 +72,7 @@ export default function SurveyApp() {
     clearTimer();
     setAnswers({});
     setIndex(0);
+    setChosenLevel(null);
     setStep('question');
 
     responseIdRef.current = createResponseId();
@@ -80,13 +85,21 @@ export default function SurveyApp() {
     clearTimer();
     setAnswers({});
     setIndex(0);
+    setChosenLevel(null);
     setStep('start');
   }, []);
 
-  const result = useMemo(
-    () => (step === 'result' ? calculateResult(answers) : null),
-    [step, answers],
-  );
+  const handleChoose = useCallback((level: Level) => {
+    setChosenLevel(level);
+    setStep('result');
+  }, []);
+
+  const result = useMemo(() => {
+    if (step !== 'result') return null;
+    const computed = calculateResult(answers);
+    // 학부모가 직접 골랐다면 그 단계로 보여줍니다
+    return chosenLevel ? { ...computed, level: chosenLevel } : computed;
+  }, [step, answers, chosenLevel]);
 
   // 결과 화면에 도달하면 한 번만 전송합니다
   useEffect(() => {
@@ -97,8 +110,9 @@ export default function SurveyApp() {
       answers,
       result,
       startedAtRef.current,
+      chosenLevel,
     );
-  }, [step, result, answers]);
+  }, [step, result, answers, chosenLevel]);
 
   return (
     <>
@@ -106,9 +120,11 @@ export default function SurveyApp() {
       <div aria-live="polite" className="sr-only">
         {step === 'question'
           ? `${TOTAL_QUESTIONS}문항 중 ${index + 1}번째 문항입니다.`
-          : step === 'result'
-            ? '검사가 완료되었습니다. 결과 화면입니다.'
-            : ''}
+          : step === 'choice'
+            ? '검사가 완료되었습니다. 단계를 선택해 주세요.'
+            : step === 'result'
+              ? '검사가 완료되었습니다. 결과 화면입니다.'
+              : ''}
       </div>
 
       {step === 'start' && <StartScreen onStart={handleStart} />}
@@ -123,6 +139,14 @@ export default function SurveyApp() {
           onNext={goNext}
           canGoPrev={index > 0}
           isLast={isLast}
+        />
+      )}
+
+      {step === 'choice' && (
+        <LevelChoiceScreen
+          ageGroup={answers[1] as AgeGroup | undefined}
+          onChoose={handleChoose}
+          onRestart={handleRestart}
         />
       )}
 
