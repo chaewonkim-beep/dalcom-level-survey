@@ -7,9 +7,11 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "verify": "tsx scripts/verify.ts"
+    "verify": "tsx scripts/verify.ts",
+    "e2e": "node scripts/e2e.js"
   },
   "dependencies": {
+    "jsdom": "^30.0.1",
     "next": "^14.2.35",
     "react": "18.3.1",
     "react-dom": "18.3.1"

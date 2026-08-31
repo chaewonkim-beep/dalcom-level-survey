@@ -26,6 +26,12 @@ export default function SurveyApp() {
   /** 예외 케이스에서 학부모가 직접 고른 단계 */
   const [chosenLevel, setChosenLevel] = useState<Level | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /**
+   * 최신 답변을 그대로 담아두는 곳.
+   * 자동 넘김(setTimeout)이 실행될 때 state 갱신이 아직 반영되지 않아
+   * 마지막 문항 답변이 빠진 채로 다음 화면을 정하는 문제를 막습니다.
+   */
+  const answersRef = useRef<Answers>({});
   /** 응답 수집용 — 개인 식별과 무관한 임의의 값 */
   const responseIdRef = useRef<string>('');
   const startedAtRef = useRef<number>(0);
@@ -50,8 +56,8 @@ export default function SurveyApp() {
       return;
     }
     // 수·연산은 완벽하지만 사고력 경험이 적으면 학부모가 직접 고르게 합니다
-    setStep(isLevelChoiceCase(answers) ? 'choice' : 'result');
-  }, [index, answers]);
+    setStep(isLevelChoiceCase(answersRef.current) ? 'choice' : 'result');
+  }, [index]);
 
   const goPrev = useCallback(() => {
     clearTimer();
@@ -61,7 +67,9 @@ export default function SurveyApp() {
   const handleSelect = useCallback(
     (value: AnswerValue) => {
       clearTimer();
-      setAnswers((prev) => ({ ...prev, [question.id]: value }));
+      const next = { ...answersRef.current, [question.id]: value };
+      answersRef.current = next;
+      setAnswers(next);
       // 선택 후 잠시 뒤 자동으로 다음 문항으로 이동 (마지막 문항은 결과로)
       timerRef.current = setTimeout(goNext, AUTO_ADVANCE_DELAY);
     },
@@ -70,6 +78,7 @@ export default function SurveyApp() {
 
   const handleStart = useCallback(() => {
     clearTimer();
+    answersRef.current = {};
     setAnswers({});
     setIndex(0);
     setChosenLevel(null);
@@ -83,6 +92,7 @@ export default function SurveyApp() {
 
   const handleRestart = useCallback(() => {
     clearTimer();
+    answersRef.current = {};
     setAnswers({});
     setIndex(0);
     setChosenLevel(null);

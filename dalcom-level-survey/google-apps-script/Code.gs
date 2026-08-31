@@ -32,12 +32,12 @@ var HEADERS = [
   '10번 수를 양으로 이해',
   '총점',
   '추천 단계',
-  '선택한 단계',
   '판정 사유',
   '소요시간(초)',
   '상세보기 클릭',
   '기기',
   '유입 경로',
+  '선택한 단계',
 ];
 
 var AGE_LABEL = { AGE_4: '4세', AGE_5: '5세', AGE_6_7: '6~7세' };
@@ -46,6 +46,7 @@ var REASON_LABEL = {
   AGE: '4세',
   CORE_NOT_READY: '수·연산 기초 필요',
   MORE_FOUNDATION_NEEDED: '1개 차이로 미달',
+  THINKING_NOT_READY: '사고력 경험 부족',
   LEVEL_2_READY: '2단계 기준 충족',
 };
 
@@ -124,8 +125,27 @@ function getSheet() {
     sheet.appendRow(HEADERS);
     sheet.setFrozenRows(1);
     sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
+  } else {
+    ensureHeaders(sheet);
   }
   return sheet;
+}
+
+/** 스크립트를 고친 뒤에도 표 맨 윗줄이 최신 항목과 맞도록 채워줍니다 */
+function ensureHeaders(sheet) {
+  var width = Math.max(sheet.getLastColumn(), HEADERS.length);
+  var row = sheet.getRange(1, 1, 1, width).getValues()[0];
+  var changed = false;
+  for (var i = 0; i < HEADERS.length; i++) {
+    if (String(row[i] || '') !== HEADERS[i]) {
+      row[i] = HEADERS[i];
+      changed = true;
+    }
+  }
+  if (changed) {
+    sheet.getRange(1, 1, 1, row.length).setValues([row]);
+    sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
+  }
 }
 
 function columnOf(header) {

@@ -28,6 +28,11 @@ npm run dev
 # 3. 결과 계산 로직 테스트 (9개 케이스)
 npm run verify
 
+# 4. 실제 화면을 브라우저 엔진에 올려 처음부터 끝까지 풀어보는 검사
+npm run build
+npx next start -p 3300 &
+npm run e2e 3300
+
 # 4. 타입 검사 / 프로덕션 빌드
 npm run typecheck
 npm run build && npm start
