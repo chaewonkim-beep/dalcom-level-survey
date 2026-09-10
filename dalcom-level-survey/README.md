@@ -206,5 +206,5 @@ dalcom-level-survey/
 
 `src/config/result.config.ts` 의 `cta.href` 에 들어 있습니다.
 
-- 유아 1단계 · https://mkt.shopping.naver.com/link/68395a398f1c490586c4c68a
-- 유아 2단계 · https://mkt.shopping.naver.com/link/68395a389afe254322008372
+- 유아 1단계 · https://www.dalcomedu.com/course/c124271e-e963-49b0-90f8-40025f15e496
+- 유아 2단계 · https://www.dalcomedu.com/course/56ef9497-a872-4641-ac00-8b46eb235932

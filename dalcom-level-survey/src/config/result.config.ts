@@ -75,7 +75,7 @@ export const RESULT_CONTENT: Record<Level, ResultContent> = {
     },
     cta: {
       label: '지금 시작하기',
-      href: 'https://mkt.shopping.naver.com/link/68395a398f1c490586c4c68a',
+      href: 'https://www.dalcomedu.com/course/c124271e-e963-49b0-90f8-40025f15e496',
     },
   },
   2: {
@@ -98,7 +98,7 @@ export const RESULT_CONTENT: Record<Level, ResultContent> = {
     },
     cta: {
       label: '지금 시작하기',
-      href: 'https://mkt.shopping.naver.com/link/68395a389afe254322008372',
+      href: 'https://www.dalcomedu.com/course/56ef9497-a872-4641-ac00-8b46eb235932',
     },
   },
 };
