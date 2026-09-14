@@ -27,7 +27,7 @@ interface OptionGroupProps<T extends string> {
  * - ↑ ↓ ← →: 포커스 이동
  * - Home / End: 처음·마지막 선택지로 이동
  * - Space / Enter: 선택
- * - 1 · 2 · 3: 해당 번호 선택지 바로 선택
+ * - 1 · 2 · 3 · 4: 해당 번호 선택지 바로 선택
  */
 export default function OptionGroup<T extends string>({
   questionNumber,
@@ -75,7 +75,8 @@ export default function OptionGroup<T extends string>({
         break;
       case '1':
       case '2':
-      case '3': {
+      case '3':
+      case '4': {
         const target = Number(event.key) - 1;
         if (target < options.length) {
           event.preventDefault();

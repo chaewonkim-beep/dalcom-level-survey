@@ -3,7 +3,7 @@
  * ------------------------------------------------------------------ */
 
 /** 1번(연령) 문항의 선택값 */
-export type AgeGroup = 'AGE_4' | 'AGE_5' | 'AGE_6_7';
+export type AgeGroup = 'AGE_4' | 'AGE_5' | 'AGE_6' | 'AGE_7';
 
 /** 2~11번(A/B) 문항의 선택값 */
 export type Choice = 'A' | 'B';

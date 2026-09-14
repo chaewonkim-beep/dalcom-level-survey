@@ -39,7 +39,8 @@ export const AGE_QUESTION: AgeQuestion = {
   options: [
     { value: 'AGE_4', label: '4세' },
     { value: 'AGE_5', label: '5세' },
-    { value: 'AGE_6_7', label: '6~7세' },
+    { value: 'AGE_6', label: '6세' },
+    { value: 'AGE_7', label: '7세' },
   ],
 };
 

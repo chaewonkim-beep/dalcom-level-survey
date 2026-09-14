@@ -40,7 +40,7 @@ var HEADERS = [
   '선택한 단계',
 ];
 
-var AGE_LABEL = { AGE_4: '4세', AGE_5: '5세', AGE_6_7: '6~7세' };
+var AGE_LABEL = { AGE_4: '4세', AGE_5: '5세', AGE_6: '6세', AGE_7: '7세' };
 var LEVEL_LABEL = { 1: '유아 1단계', 2: '유아 2단계' };
 var REASON_LABEL = {
   AGE: '4세',

@@ -43,14 +43,17 @@ export const THINKING_OVERRIDE_NUMERACY = 6;
 export const LEVEL_2_CRITERIA: Record<AgeGroup, LevelCriteria | null> = {
   AGE_4: null,
   AGE_5: { minNumeracyB: 5, minThinkingB: 1 },
-  AGE_6_7: { minNumeracyB: 4, minThinkingB: 1 },
+  // 6세와 7세는 같은 기준을 씁니다
+  AGE_6: { minNumeracyB: 4, minThinkingB: 1 },
+  AGE_7: { minNumeracyB: 4, minThinkingB: 1 },
 };
 
 /** 연령 선택값 → 화면 표기 */
 export const AGE_LABEL: Record<AgeGroup, string> = {
   AGE_4: '4세',
   AGE_5: '5세',
-  AGE_6_7: '6~7세',
+  AGE_6: '6세',
+  AGE_7: '7세',
 };
 
 /** 단계별 결과 화면 문구 + CTA */

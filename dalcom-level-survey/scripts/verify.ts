@@ -34,7 +34,7 @@ const check = (name: string, got: SurveyResult, want: Partial<SurveyResult>) => 
 };
 
 console.log(`총 ${TOTAL_QUESTIONS}문항 · 만점 ${MAX_TOTAL_SCORE}점`);
-console.log(`기준 — 수·연산 5세 ${LEVEL_2_CRITERIA.AGE_5?.minNumeracyB}개 / 6~7세 ${LEVEL_2_CRITERIA.AGE_6_7?.minNumeracyB}개, 사고력 ${LEVEL_2_CRITERIA.AGE_5?.minThinkingB}개 이상\n`);
+console.log(`기준 — 수·연산 5세 ${LEVEL_2_CRITERIA.AGE_5?.minNumeracyB}개 / 6~7세 ${LEVEL_2_CRITERIA.AGE_6?.minNumeracyB}개, 사고력 ${LEVEL_2_CRITERIA.AGE_5?.minThinkingB}개 이상\n`);
 
 /* ---------- 4세: 무조건 1단계 ---------- */
 check('4세 / 전부 B(만점)', calculateResult(build('AGE_4', allB)), { level: 1, reason: 'AGE', totalScore: 15 });
@@ -48,9 +48,9 @@ check('5세 / 수연산 3개', calculateResult(build('AGE_5', numeracy(3))), { l
 check('5세 / 수연산 0개', calculateResult(build('AGE_5', {})), { level: 1, reason: 'CORE_NOT_READY', totalScore: 0 });
 
 /* ---------- 6~7세: 수·연산 4개 이상 ---------- */
-check('6~7세 / 수연산 4개 (경계 통과)', calculateResult(build('AGE_6_7', numeracy(4))), { level: 2, reason: 'LEVEL_2_READY' });
-check('6~7세 / 수연산 3개 (1개 부족)', calculateResult(build('AGE_6_7', numeracy(3))), { level: 1, reason: 'MORE_FOUNDATION_NEEDED' });
-check('6~7세 / 수연산 2개', calculateResult(build('AGE_6_7', numeracy(2))), { level: 1, reason: 'CORE_NOT_READY' });
+check('6·7세 / 수연산 4개 (경계 통과)', calculateResult(build('AGE_6', numeracy(4))), { level: 2, reason: 'LEVEL_2_READY' });
+check('6·7세 / 수연산 3개 (1개 부족)', calculateResult(build('AGE_6', numeracy(3))), { level: 1, reason: 'MORE_FOUNDATION_NEEDED' });
+check('6·7세 / 수연산 2개', calculateResult(build('AGE_6', numeracy(2))), { level: 1, reason: 'CORE_NOT_READY' });
 
 /* ---------- 사고력 최소 조건 (B안: 1개 이상) ---------- */
 check('5세 / 수연산 5개 + 사고력 0개 → 1단계',
@@ -60,14 +60,22 @@ check('5세 / 수연산 5개 + 사고력 1개 → 2단계',
 /* 예외 규칙: 수·연산 6/6이면 사고력 0개여도 2단계 */
 check('5세 / 수연산 6개(만점) + 사고력 0개 → 2단계 (예외)',
   calculateResult(build('AGE_5', numeracy(6, 0))), { level: 2, reason: 'LEVEL_2_READY' });
-check('6~7세 / 수연산 6개(만점) + 사고력 0개 → 2단계 (예외)',
-  calculateResult(build('AGE_6_7', numeracy(6, 0))), { level: 2, reason: 'LEVEL_2_READY' });
-check('6~7세 / 수연산 5개 + 사고력 0개 → 1단계 (예외 아님)',
-  calculateResult(build('AGE_6_7', numeracy(5, 0))), { level: 1, reason: 'THINKING_NOT_READY' });
-check('6~7세 / 수연산 4개 + 사고력 1개 → 2단계',
-  calculateResult(build('AGE_6_7', numeracy(4, 1))), { level: 2, reason: 'LEVEL_2_READY' });
+check('6·7세 / 수연산 6개(만점) + 사고력 0개 → 2단계 (예외)',
+  calculateResult(build('AGE_6', numeracy(6, 0))), { level: 2, reason: 'LEVEL_2_READY' });
+check('6·7세 / 수연산 5개 + 사고력 0개 → 1단계 (예외 아님)',
+  calculateResult(build('AGE_6', numeracy(5, 0))), { level: 1, reason: 'THINKING_NOT_READY' });
+check('6·7세 / 수연산 4개 + 사고력 1개 → 2단계',
+  calculateResult(build('AGE_6', numeracy(4, 1))), { level: 2, reason: 'LEVEL_2_READY' });
 check('5세 / 사고력 3개여도 수연산 4개면 1단계',
   calculateResult(build('AGE_5', numeracy(4, 3))), { level: 1, reason: 'MORE_FOUNDATION_NEEDED' });
+
+/* ---------- 6세와 7세는 같은 기준 ---------- */
+check('7세 / 수연산 4개 → 2단계 (6세와 동일)',
+  calculateResult(build('AGE_7', numeracy(4))), { level: 2, reason: 'LEVEL_2_READY' });
+check('7세 / 수연산 3개 → 1단계 (6세와 동일)',
+  calculateResult(build('AGE_7', numeracy(3))), { level: 1, reason: 'MORE_FOUNDATION_NEEDED' });
+check('7세 / 수연산 6개 + 사고력 0개 → 2단계 (예외)',
+  calculateResult(build('AGE_7', numeracy(6, 0))), { level: 2, reason: 'LEVEL_2_READY' });
 
 /* ---------- 배점 확인 ---------- */
 check('만점 15점 (사고력 3 + 수연산 12)', calculateResult(build('AGE_5', allB)), { totalScore: 15 });
@@ -79,7 +87,7 @@ const SCORE: Record<number, number> = { 2: 1, 3: 1, 4: 1, 5: 2, 6: 2, 7: 2, 8: 2
 let mismatch = 0;
 const reasonCount: Record<string, number> = {};
 const levelCount: Record<string, number> = {};
-for (const age of ['AGE_4', 'AGE_5', 'AGE_6_7'] as AgeGroup[]) {
+for (const age of ['AGE_4', 'AGE_5', 'AGE_6', 'AGE_7'] as AgeGroup[]) {
   for (let mask = 0; mask < 512; mask++) {
     const ch: Record<number, 'A' | 'B'> = {};
     for (let i = 0; i < 9; i++) ch[i + 2] = (mask >> i) & 1 ? 'B' : 'A';
@@ -110,7 +118,7 @@ for (const age of ['AGE_4', 'AGE_5', 'AGE_6_7'] as AgeGroup[]) {
     levelCount[got.level] = (levelCount[got.level] ?? 0) + 1;
   }
 }
-check('전수 검사 1536가지 모두 일치',
+check('전수 검사 2048가지 모두 일치',
   { level: 1, reason: 'AGE', totalScore: mismatch } as SurveyResult, { totalScore: 0 });
 
 console.log('\n사유별 분포:', reasonCount);

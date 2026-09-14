@@ -7,7 +7,7 @@ import ProgressBar from './ProgressBar';
 import { QUESTION_NOTICE, TOTAL_QUESTIONS } from '@/config/survey.config';
 import type { AnswerValue, Question } from '@/types/survey';
 
-const AGE_PREFIXES = ['A', 'B', 'C'];
+const AGE_PREFIXES = ['A', 'B', 'C', 'D'];
 const CHOICE_PREFIXES = ['A', 'B'];
 
 interface QuestionScreenProps {

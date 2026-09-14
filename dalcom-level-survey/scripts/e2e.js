@@ -21,7 +21,7 @@ function boot(url) {
 }
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-/** age: 0=4세 1=5세 2=6~7세 / thinking·numeracy: 0=A 1=B */
+/** age: 0=4세 1=5세 2=6세 3=7세 / thinking·numeracy: 0=A 1=B */
 async function run(age, thinking, numeracy) {
   const dom = await boot(`http://127.0.0.1:${PORT}/`);
   const doc = dom.window.document;
@@ -46,8 +46,8 @@ let pass = 0, fail = 0;
 const ok = (n, c) => { console.log(`${c ? 'PASS' : 'FAIL'}  ${n}`); c ? pass++ : fail++; };
 
 (async () => {
-  // 예외 케이스 — 6~7세 · 사고력 전부 A · 수·연산 전부 B
-  let r = await run(2, 0, 1);
+  // 예외 케이스 — 7세 · 사고력 전부 A · 수·연산 전부 B
+  let r = await run(3, 0, 1);
   ok('예외 케이스 → 단계 선택 화면', /목표에 따라 단계가 달라져요/.test(r.txt));
   ok('선택지 두 개 노출', /유아 2단계.*유아 1단계/.test(r.txt));
   const cards = r.qa('button').filter((b) => /유아 [12]단계/.test(b.textContent || ''));
