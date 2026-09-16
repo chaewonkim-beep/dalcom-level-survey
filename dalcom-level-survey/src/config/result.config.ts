@@ -66,7 +66,7 @@ export const RESULT_CONTENT: Record<Level, ResultContent> = {
       src: '/images/cover-level1.jpg',
       alt: '달콤수학 유아사고력 1단계 프로젝트 교재 표지',
     },
-    pointsTitle: '유아 1단계에서는',
+    pointsTitle: '지금 우리 아이에게 필요한 건?',
     points: [
       '수와 연산의 기초를 충분히 다져요.',
       '도형·위치·규칙을 놀이처럼 경험해요.',
@@ -89,7 +89,7 @@ export const RESULT_CONTENT: Record<Level, ResultContent> = {
       src: '/images/cover-level2.jpg',
       alt: '달콤수학 유아사고력 2단계 프로젝트 교재 표지',
     },
-    pointsTitle: '유아 2단계에서는',
+    pointsTitle: '지금 우리 아이에게 필요한 건?',
     points: [
       '받아올림·받아내림이 있는 덧셈·뺄셈을 익혀요.',
       '자릿값과 수의 규칙을 이해해요.',
