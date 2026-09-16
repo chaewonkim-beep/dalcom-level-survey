@@ -9,15 +9,16 @@ import type { AgeQuestion, ChoiceQuestion, Question } from '@/types/survey';
 
 /** 시작 화면 문구 */
 export const INTRO_CONTENT = {
-  eyebrow: '달콤 유아 사고력',
-  title: '우리 아이는\n유아 1단계? 유아 2단계?',
+  /** 제목 위 작은 글씨 — 비워 두면 표시하지 않습니다 */
+  eyebrow: '',
+  title: '우리 아이\n수학 레벨 테스트',
   /** 안내 문구 */
   description:
     '아이의 연령, 경험, 현재 수준을 확인하고\n우리 아이에게 맞는 단계를 찾아보세요.',
   /** 보조 문구 */
   subText: '약 1분 · 총 10문항',
   /** 시작 버튼 */
-  startLabel: '우리 아이 단계 확인하기',
+  startLabel: 'Start!',
   /** 시작 화면에 설명 없이 나란히 놓는 교재 표지 2장 */
   covers: [
     {

@@ -12,6 +12,9 @@
  * 설치 방법은 DEPLOY.md 를 참고하세요.
  */
 
+/** 시각 표시 형식 (예: 2026-09-14 15:32:07) */
+var TIME_FORMAT = 'yyyy-mm-dd hh:mm:ss';
+
 /** 응답이 쌓일 시트 이름 */
 var SHEET_NAME = '응답';
 
@@ -84,13 +87,13 @@ function saveEvent(data) {
   var now = new Date();
 
   if (data.event === 'start') {
-    setCell(sheet, row, '시작시각', now);
+    setTimeCell(sheet, row, '시작시각', now);
     setCell(sheet, row, '기기', data.device || '');
     setCell(sheet, row, '유입 경로', data.referrer || '직접 접속');
   }
 
   if (data.event === 'complete') {
-    setCell(sheet, row, '완료시각', now);
+    setTimeCell(sheet, row, '완료시각', now);
     setCell(sheet, row, '연령', AGE_LABEL[data.ageGroup] || data.ageGroup || '');
     for (var id = 2; id <= 10; id++) {
       var header = findHeaderByQuestion(id);
@@ -156,6 +159,15 @@ function columnOf(header) {
 function setCell(sheet, row, header, value) {
   var col = columnOf(header);
   if (col) sheet.getRange(row, col).setValue(value);
+}
+
+/** 시각 셀 — 날짜만 보이지 않도록 표시 형식까지 지정합니다 */
+function setTimeCell(sheet, row, header, value) {
+  var col = columnOf(header);
+  if (!col) return;
+  var cell = sheet.getRange(row, col);
+  cell.setValue(value);
+  cell.setNumberFormat(TIME_FORMAT);
 }
 
 function getCell(sheet, row, header) {

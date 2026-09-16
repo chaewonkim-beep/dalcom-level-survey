@@ -13,13 +13,15 @@ export default function StartScreen({ onStart }: StartScreenProps) {
       aria-labelledby="start-title"
     >
       <div className="flex flex-1 flex-col justify-center py-6">
-        <p className="mb-3 text-sm font-bold tracking-wide text-brand-600">
-          {INTRO_CONTENT.eyebrow}
-        </p>
+        {INTRO_CONTENT.eyebrow && (
+          <p className="mb-3 text-sm font-bold tracking-wide text-brand-600">
+            {INTRO_CONTENT.eyebrow}
+          </p>
+        )}
 
         <h1
           id="start-title"
-          className="whitespace-pre-line text-[28px] font-extrabold leading-tight text-slate-900"
+          className="whitespace-pre-line text-[36px] font-extrabold leading-tight text-slate-900"
         >
           {INTRO_CONTENT.title}
         </h1>
