@@ -28,7 +28,12 @@ async function run(age, thinking, numeracy) {
   const qa = (s) => [...doc.querySelectorAll(s)];
   const txt = () => (doc.body.textContent || '').replace(/\s+/g, ' ');
   await sleep(5000);
-  qa('button').find((b) => (b.textContent || '').includes('확인하기')).click();
+  const startBtn = qa('button').find((b) => {
+    const t = (b.textContent || '').trim();
+    return t === 'Start!' || t.includes('확인하기') || t.includes('시작');
+  });
+  if (!startBtn) throw new Error('시작 버튼을 찾지 못했습니다');
+  startBtn.click();
   await sleep(700);
   const nextBtn = () => qa('button').find((b) => ['다음', '결과 보기'].includes((b.textContent || '').trim()));
   const ans = async (i) => {

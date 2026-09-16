@@ -58,8 +58,6 @@ export default function QuestionScreen({
           {question.title}
         </h1>
 
-        {question.images && <QuestionImages images={question.images} />}
-
         <div className="mt-6">
           <OptionGroup<string>
             questionNumber={question.id}
@@ -70,6 +68,9 @@ export default function QuestionScreen({
             prefixes={prefixes}
           />
         </div>
+
+        {/* 사진은 참고용이라 선택지 아래에 둡니다 */}
+        {question.images && <QuestionImages images={question.images} />}
 
         {/* 지정한 문항에서만 한 번 보여주는 안내 */}
         {index === QUESTION_NOTICE.questionNumber - 1 && QUESTION_NOTICE.text && (
