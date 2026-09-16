@@ -33,19 +33,6 @@ export default function StartScreen({ onStart }: StartScreenProps) {
         <p className="mt-5 inline-flex self-start rounded-full bg-white px-3.5 py-1.5 text-[13px] font-semibold text-slate-500">
           {INTRO_CONTENT.subText}
         </p>
-
-        {/* 교재 표지 (설명 없이 이미지만) */}
-        <div className="mt-6 grid grid-cols-2 items-start gap-3">
-          {INTRO_CONTENT.covers.map((cover) => (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={cover.src}
-              src={cover.src}
-              alt={cover.alt}
-              className="block w-full rounded-2xl"
-            />
-          ))}
-        </div>
       </div>
 
       <div className="sticky bottom-0 bg-brand-50 pt-4">

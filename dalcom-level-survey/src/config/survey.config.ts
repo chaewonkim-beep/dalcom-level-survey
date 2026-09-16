@@ -19,17 +19,6 @@ export const INTRO_CONTENT = {
   subText: '약 1분 · 총 10문항',
   /** 시작 버튼 */
   startLabel: 'Start!',
-  /** 시작 화면에 설명 없이 나란히 놓는 교재 표지 2장 */
-  covers: [
-    {
-      src: '/images/cover-level1.jpg',
-      alt: '달콤수학 유아사고력 1단계 프로젝트 교재 표지',
-    },
-    {
-      src: '/images/cover-level2.jpg',
-      alt: '달콤수학 유아사고력 2단계 프로젝트 교재 표지',
-    },
-  ],
 } as const;
 
 /** 1번 — 연령 문항(3지선다) */
