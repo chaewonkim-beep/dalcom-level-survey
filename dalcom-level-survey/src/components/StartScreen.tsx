@@ -6,6 +6,13 @@ interface StartScreenProps {
   onStart: () => void;
 }
 
+/**
+ * 시작 화면.
+ * 교재 표지 두 권은 뺀 상태입니다. 다시 넣으려면 subText 아래에
+ *   <div className="mt-6 grid grid-cols-2 items-start gap-3"> … </div>
+ * 로 `/images/cover-level1.jpg`, `/images/cover-level2.jpg` 를 넣으면 됩니다.
+ * (두 파일은 결과 화면에서도 쓰이므로 public/images 에 그대로 있습니다)
+ */
 export default function StartScreen({ onStart }: StartScreenProps) {
   return (
     <section
